@@ -5,9 +5,9 @@ const swaggerUi = require('swagger-ui-express')
 const options = {
   definition: {
     openapi: '3.0.0',
-    info: { title: 'Crossfit WOD API', version: '1.0.0' }
+    info: { title: 'Chronos Gym API', version: '1.0.0' }
   },
-  apis: ['./src/v1/routes/workout.routes.js', './src/db/workout.js', './src/v1/docs/docs.yml']
+  apis: ['./src/v1/docs/docs.yml']
 }
 
 // Docs in JSON format
