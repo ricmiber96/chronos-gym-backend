@@ -1,29 +1,37 @@
+const httpStatus = require('http-status')
 const workoutService = require('../services/workout.service')
+const { ApiError } = require('../utils/ApiError')
 
-const getAllWorkouts = (req, res) => {
-  const { mode, equipment, length, page, sort } = req.query
+const getAllWorkouts = async (req, res) => {
+  // const { mode, equipment, length, page, sort } = req.query
   try {
-    const allWorkouts = workoutService.getAllWorkouts({ mode, equipment, length, page, sort })
-    res.send({ status: 'OK', data: allWorkouts })
+    // const filter = pick(req.query, ['name', 'role'])
+    // const options = pick(req.query, ['sortBy', 'limit', 'page'])
+    const allWorkouts = await workoutService.getWorkouts(req, res)
+    res.json(allWorkouts)
   } catch (err) {
     res.status(err?.status || 500).send({ status: 'Failed', data: { error: err?.message || err } })
   }
 }
 
-const getOneWorkout = (req, res) => {
-  const { params: { workoutId } } = req
+const getWorkout = async (req, res) => {
+  const workoutId = req.params.workoutId
+
   if (!workoutId) {
     res.status(400).send({ status: 'FAILED', data: { error: "Parameter ':workoutId' can not be empty" } })
   }
   try {
-    const workout = workoutService.getOneWorkout(workoutId)
-    res.send({ status: 'OK', data: workout })
+    const workout = await workoutService.getWorkoutById(workoutId)
+    if (!workout) {
+      throw new ApiError(httpStatus.NOT_FOUND, 'Workout not found')
+    }
+    res.json({ status: 'OK', data: workout })
   } catch (err) {
     res.status(err?.status || 500).send({ status: 'FAIL', data: { error: err?.message || err } })
   }
 }
 
-const createNewWorkout = (req, res) => {
+const createWorkout = async (req, res) => {
   const { body } = req
 
   if (
@@ -50,34 +58,37 @@ const createNewWorkout = (req, res) => {
   }
 
   try {
-    const createdWorkout = workoutService.createNewWorkout(newWorkout)
+    const createdWorkout = await workoutService.createNewWorkout(newWorkout)
     res.status(201).send({ status: 'Created', data: createdWorkout })
   } catch (err) {
     res.status(err?.status || 500).send({ status: 'Internal Server Error', data: err?.message || err })
   }
 }
 
-const updateOneWorkout = (req, res) => {
-  const { body, params: { workoutId } } = req
+const updateWorkout = async (req, res) => {
+  const body = req.body
+  const workoutId = req.params.workoutId
+
+  console.log(workoutId)
   if (!workoutId) {
     res.status(400).send({ status: 'Failed', data: { error: 'Parameter :id cannot be empty' } })
   }
   try {
-    const updatedWorkout = workoutService.updateOneWorkout(workoutId, body)
+    const updatedWorkout = await workoutService.updateWorkoutById(workoutId, body)
     res.send({ status: 'OK', data: updatedWorkout })
   } catch (err) {
     res.status(err?.status || 500).send({ status: 'Failed', data: { error: err?.message || err } })
   }
 }
 
-const deleteOneWorkout = (req, res) => {
-  const { params: { workId } } = req
-  if (!workId) {
+const deleteWorkout = async (req, res) => {
+  const { params: { workoutId } } = req
+  if (!workoutId) {
     res.status(400).send({ status: 'Failed', data: { error: 'Parameter :id is required' } })
   }
   try {
-    workoutService.deleteOneWorkout(workId)
-    res.status(204).send({ status: 'OK' })
+    await workoutService.deleteOneWorkout(workoutId)
+    res.send({ status: 'OK' })
   } catch (err) {
     res.status(err?.status || 500).send({ status: 'Failed', data: { error: err?.message || err } })
   }
@@ -85,8 +96,8 @@ const deleteOneWorkout = (req, res) => {
 
 module.exports = {
   getAllWorkouts,
-  getOneWorkout,
-  createNewWorkout,
-  updateOneWorkout,
-  deleteOneWorkout
+  getWorkout,
+  createWorkout,
+  updateWorkout,
+  deleteWorkout
 }

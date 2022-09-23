@@ -1,43 +1,23 @@
 const express = require('express')
-const apicache = require('apicache')
-const workoutController = require('../../controllers/workout.controller')
+// const apicache = require('apicache')
+// const Workout = require('../models/workout.model')
+const { getAllWorkouts, getWorkout, createWorkout, updateWorkout, deleteWorkout } = require('../../controllers/workout.controller')
 const recordController = require('../../controllers/record.controller')
+// const workoutMiddleware = require('../../middlewares/sort-filter-pagination/workout.middleware')
 
 const router = express.Router()
-const cache = apicache.middleware
+// const cache = apicache.middleware
 
-/**
- * @openapi
- * /api/v1/workouts:
- *   get:
- *     tags:
- *       - Workouts
- *     responses:
- *       200:
- *         description: OK
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 status:
- *                   type: string
- *                   example: OK
- *                 data:
- *                   type: array
- *                   items:
- *                     type: object
- */
-router.get('/', cache('2 minutes'), workoutController.getAllWorkouts)
+router.get('/', getAllWorkouts)
 
-router.get('/:workoutId', workoutController.getOneWorkout)
+router.get('/:workoutId', getWorkout)
 
 router.get('/:workoutId/records', recordController.getRecordByWorkoutId)
 
-router.post('/', workoutController.createNewWorkout)
+router.post('/', createWorkout)
 
-router.put('/:workoutId', workoutController.updateOneWorkout)
+router.put('/:workoutId', updateWorkout)
 
-router.delete('/:workoutId', workoutController.deleteOneWorkout)
+router.delete('/:workoutId', deleteWorkout)
 
 module.exports = router
