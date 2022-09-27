@@ -7,7 +7,9 @@ An example of NodeJS server explained step by step and divided in differences br
 The main branch have a simple NodeJS server without Databases
 
 ### - MongoDB
-The main MongoDB branch have a simple NodeJS server without Databases
+The MongoDB branch have a NodeJS server clean architecture and MongoDB database
 
 ### - Testing-Server
-The testing server branch have a simple NodeJS server without Databases
+The Testing Server branch have a differences function for testing server
+### - JWT-Server
+The JWT Server branch have a functions to generate a JWT token authentication for users can access and registry
