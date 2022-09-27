@@ -1,5 +1,10 @@
+require('dotenv').config()
 const mongoose = require('mongoose')
-const MONGO_DB_URI = process.env.MONGO_DB_URI || 'mongodb://mongo/ChronosDB'
+const { NODE_ENV, MONGO_DB_URI_TEST, MONGO_DB_URI } = process.env
+
+const connectionString = NODE_ENV === 'test'
+  ? MONGO_DB_URI_TEST
+  : MONGO_DB_URI
 
 mongoose.connect(MONGO_DB_URI, {
   useNewUrlParser: true,

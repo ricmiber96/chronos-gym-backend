@@ -3,10 +3,7 @@ const workoutService = require('../services/workout.service')
 const { ApiError } = require('../utils/ApiError')
 
 const getAllWorkouts = async (req, res) => {
-  // const { mode, equipment, length, page, sort } = req.query
   try {
-    // const filter = pick(req.query, ['name', 'role'])
-    // const options = pick(req.query, ['sortBy', 'limit', 'page'])
     const allWorkouts = await workoutService.getWorkouts(req, res)
     res.json(allWorkouts)
   } catch (err) {
@@ -59,7 +56,9 @@ const createWorkout = async (req, res) => {
 
   try {
     const createdWorkout = await workoutService.createNewWorkout(newWorkout)
-    res.status(201).send({ status: 'Created', data: createdWorkout })
+    res
+      .status(201)
+      .send({ status: 'Created', data: createdWorkout })
   } catch (err) {
     res.status(err?.status || 500).send({ status: 'Internal Server Error', data: err?.message || err })
   }

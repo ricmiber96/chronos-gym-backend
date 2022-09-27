@@ -1,7 +1,7 @@
 version: '3'
 services:
   server:
-    container_name: 'my-server'
+    container_name: 'my-server-test'
     restart: always
     build: .
     ports:
@@ -11,9 +11,9 @@ services:
     volumes:
       - .:/usr/src/app
   mongo:
-    container_name: "my-database"
+    container_name: "my-database-test"
     image: mongo
     ports:
       - "27018:27017"
     volumes:
-      - ./src/mongo/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
+      - ./src/mongo/init-mongo-test.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
